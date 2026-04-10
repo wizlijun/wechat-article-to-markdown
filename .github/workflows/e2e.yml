@@ -1,0 +1,31 @@
+name: E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Comma-separated WeChat article URLs"
+        required: true
+        default: "https://mp.weixin.qq.com/s/Y7dyRC7CJ09miHWU6LBzBA"
+      timeout:
+        description: "Per-article timeout seconds"
+        required: false
+        default: "240"
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run live e2e tests
+        env:
+          WECHAT_E2E_URLS: ${{ github.event.inputs.urls }}
+          WECHAT_E2E_TIMEOUT: ${{ github.event.inputs.timeout }}
+        run: uv run --with pytest pytest -q -m e2e -s

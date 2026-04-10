@@ -1,0 +1,10 @@
+output/
+debug.html
+*.log
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+config.yml
+wechat_article_to_markdown.egg-info/
+.pytest_cache/

@@ -1,0 +1,8 @@
+camoufox[geoip]
+markdownify
+beautifulsoup4
+httpx
+flask
+flask-cors
+pyyaml
+mcp

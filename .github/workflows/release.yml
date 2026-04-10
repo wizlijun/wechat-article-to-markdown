@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  e2e:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run release e2e tests
+        env:
+          WECHAT_E2E_URLS: ${{ vars.RELEASE_E2E_URLS != '' && vars.RELEASE_E2E_URLS || 'https://mp.weixin.qq.com/s/Y7dyRC7CJ09miHWU6LBzBA' }}
+          WECHAT_E2E_TIMEOUT: "300"
+        run: uv run --with pytest pytest -q -m e2e -s
+
+  publish:
+    needs: [verify, e2e]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Build
+        run: uv build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

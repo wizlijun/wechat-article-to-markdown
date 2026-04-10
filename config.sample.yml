@@ -1,0 +1,16 @@
+server:
+  host: "0.0.0.0"
+  port: 5001
+  debug: false
+
+settings:
+  # Access password for API / MCP operations (default: wiz)
+  passwd: "wiz"
+  # Directory to save downloaded articles
+  output_dir: "output"
+  # Max concurrent download workers
+  max_concurrent: 1
+  # Auto-refresh interval for the web UI queue (seconds)
+  auto_refresh_interval: 5
+  # Maximum pending tasks in queue
+  max_queue_size: 100
